@@ -1,0 +1,243 @@
+<section class="custom-collection">
+    <div class= "container py-5">
+        
+        <h3 class = "mt-5 text-right w-75 ml-auto">{{ section.settings.section_title }}</h3>
+        <p class = "my-4 w-75 text-right ml-auto">{{ section.settings.section_sub_title }}</p>
+        
+        <div class="swiper mySwiper collection-slider">
+            <div class="swiper-wrapper">
+                
+                {% for block in section.blocks %}
+                    {% assign CB  =  block.settings.custom_collection  %}
+                    {% for product in CB.products %}
+                        
+                        <div class="swiper-slide"> 
+                        <div class="product-container">
+                            <a href="{{ product.url }}">
+                              <div class='product-img-container'>
+                                <img class="product-img" src="{{ product.featured_image | img_url : "500x" }}" alt="{{ product.featured_image.alt | escape }}">
+                              </div>
+                            </a>
+                            <div class="product-info">
+                                <h2 class="product-title px-3">{{ product.title }}</h2>
+                                <div class="d-inline-flex">
+                                  <p class="px-3 ">{{ product.metafields.custom.grade }}</p>
+                                  <p class="px-3 ">{{ product.metafields.custom.semester }}</p>
+                                </div>
+                                    {% assign pfandQty = 0 %}
+
+                                  <form action="#" id="addToCartForm" class="m-auto px-5">
+                                  <input type="hidden" name="id" id="modalItemID" value="{{ product.variants[0].id }}" data-tag="{% if product.tags contains "Education" %}a7mos{% endif %}">
+                            
+                                   <input type="number" name="quantity" id="modalItemQuantity" min="1" value="1" class="col-auto form-control-lg w-100">
+                                  <button id="mainBtn" type="submit" class="btn btn-dark col-auto add-to-cart-btn">Add To Cart <span class="product-price px-3">  {{ product.price | money }}</span></button>
+                                </form>
+
+                            </div>
+                        </div>
+                    </div>
+                    
+                {% endfor %}
+            {% endfor %}
+            
+        </div>
+        <div class="swiper-pagination"></div>
+    </div>            
+      
+     
+      <h1>
+                      {% for product in collections.all.products %}
+                        {% if product.handle == "product-book" %} 
+                          {{ product.title }} {{ product.variants.first.id }}
+                        {% endif %}
+                       {% endfor %}
+                              </h1>
+                  
+    
+</div>
+</section>
+
+{% schema %}
+{
+    "name" : "Custom Collection",
+    "settings" : [
+        {
+            "type" : "richtext",
+            "id" : "section_title",
+            "label" : "Collection Title"
+        },
+        {
+            "type" : "text",
+            "id" : "section_sub_title",
+            "label" : "Collection Small Hint"
+        }
+    ],
+    "blocks" : [
+        {
+            "name" : " featured collection",  
+            "type" : "collection",
+            "settings" : [
+                {
+                    "type" : "collection",
+                    "id" : "custom_collection",
+                    "label" : "Select A Featured Collection"
+                }
+            ] 
+        }
+    ],
+    "presets" : [
+        {
+            "category" : "Collection Books",
+            "name" : "Custom Collection"
+        }
+    ]
+    
+}  
+{% endschema %}
+
+{% style %}
+
+       .custom-collection .swiper {
+    width: 100%;
+    height: 100%;
+    margin: 10rem 0px;
+    margin-y: 10rem;
+    padding: 5rem 0;
+      }
+
+      .custom-collection .swiper-slide {
+        text-align: center;
+        font-size: 18px;
+        background: #fff;
+
+        /* Center slide text vertically */
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: -webkit-flex;
+        display: flex;
+        -webkit-box-pack: center;
+        -ms-flex-pack: center;
+        -webkit-justify-content: center;
+        justify-content: center;
+        -webkit-box-align: center;
+        -ms-flex-align: center;
+        -webkit-align-items: center;
+        align-items: center;
+      }
+
+     .custom-collection .swiper-slide img {
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+  
+.swiper-horizontal>.swiper-pagination-bullets, .swiper-pagination-bullets.swiper-pagination-horizontal, .swiper-pagination-custom, .swiper-pagination-fraction{
+  bottom : 0 !important;
+}
+
+ 
+  
+{% endstyle %}
+
+<script>
+  
+</script>
+
+{% javascript %}
+  <!-- Initialize CUSTOM COLLECTION Swiper -->
+    let swiper = new Swiper(".collection-slider", {
+        slidesPerView: 1,
+        spaceBetween: 10,
+        pagination: {
+            el: ".swiper-pagination",
+            grabCursor: true
+        },
+        breakpoints: {
+            1440: {
+                slidesPerView: 4,
+                spaceBetween: 20,
+            },
+            1024: {
+                slidesPerView: 3,
+                spaceBetween: 40,
+            },
+            768: {
+                slidesPerView: 2,
+                spaceBetween: 40,
+            },
+            425: {
+                slidesPerView: 1,
+                spaceBetween: 40,
+            }
+        },
+    });
+
+
+
+  /* The function toggles more (hidden) text when the user clicks on "Read more". 
+  The IF ELSE statement ensures that the text 'read more' and 'read less' changes interchangeably when clicked on. */
+  
+$('.moreless-button').click(function() {
+  $('.moretext').slideToggle();
+  if ($('.moreless-button').text() == "Read more") {
+    $(this).text("Read less")
+  } else {
+    $(this).text("Read more")
+  }
+});
+
+
+  
+var modalAddToCartForms = document.querySelectorAll(".product-container form");
+
+  modalAddToCartForms.forEach((modalAddToCartForm) => {
+    if( modalAddToCartForm != null ) {
+    modalAddToCartForm.addEventListener("submit", function(e) {
+        e.preventDefault();
+    const ele = modalAddToCartForm.querySelector("#modalItemID");
+     let pfandQty = 0;
+if( ele.dataset.tag =="a7mos"){
+      pfandQty = 1;
+}
+
+ 
+        let formData = {
+            'items': [
+                {
+                    'id':ele.value,
+                    'quantity': modalAddToCartForm.querySelector("#modalItemQuantity").value
+                },
+                {
+                    'id' : 40885895299106 ,
+                    'quantity': pfandQty
+
+                }
+            ]
+        };
+    
+        fetch('/cart/add.js', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(formData)
+        })
+        .then((resp) => { 
+            return resp.json();
+        })
+        .catch((err) => {
+            console.error('Error: ' + err);
+        })
+    });
+}    
+  })
+  
+
+
+
+
+
+
+  
+{% endjavascript %}

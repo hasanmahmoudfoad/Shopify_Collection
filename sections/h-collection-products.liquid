@@ -1,0 +1,58 @@
+{% comment %} PRODUCTS WTHIN COLLECTION {% endcomment %}
+
+<section class="collection-products">
+  <div class='container'>
+    <h1 class="title title--primary">{{ section.settings.title | escape }}</h1>
+    <div class='row'>
+{%- for product in collection.products -%}
+        <div class='col-sm-12 col-md-3 col-lg-4 my-4'>
+          <div class="product-container poster relative-div">
+            <a href="{{ product.url }}">
+              <div class= 'parallax-div-container'>
+                <div class='product-img-container layer-1' data-offset="{% if section.settings.card_parallax %}-2{% else %}0{% endif %}">
+                  <img class="product-img" src="{{ product.featured_image | img_url : "500x" }}" alt="{{ product.featured_image.alt | escape }}">
+                </div>  
+              </div>
+            </a>
+            <div class="product-info layer-2 p-3">
+                <h2 class="product-title px-3">{{ product.title }}</h2>                    
+            </div>
+          </div>
+        </div>
+      
+    {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-36251023-1']);
+  _gaq.push(['_setDomainName', 'jqueryscript.net']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+
+
+
+{% schema %}
+  {
+    "name": "Section name",
+    "settings": []
+  }
+{% endschema %}
+
+{% stylesheet %}
+{% endstylesheet %}
+
+{% javascript %}
+{% endjavascript %}

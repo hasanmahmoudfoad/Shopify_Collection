@@ -1,0 +1,85 @@
+{% comment %} ALL PRODUCTS {% endcomment %}
+
+{%- style -%}
+
+ .all-products .product-title{
+  height:80px;
+   font-size:2rem;
+}
+{%- endstyle -%}
+
+    {%- if section.settings.enable_filtering or section.settings.enable_sorting -%}
+        <aside aria-labelledby="verticalTitle" class="facets-wrapper{% unless section.settings.enable_filtering %} facets-wrapper--no-filters{% endunless %}{% if section.settings.filter_type != 'vertical' %} page-width{% endif %}" id="main-collection-filters" data-id="{{ section.id }}">
+            {% render 'facets', results: collection, enable_filtering: section.settings.enable_filtering, enable_sorting: section.settings.enable_sorting, filter_type: section.settings.filter_type %}
+        </aside>
+    {%- endif -%}
+    
+
+<section class='all-products my-5'>
+    <div class='container'>
+        <div class='row parallax-div'>
+          {%- for product in collection.products -%}                
+          <div class='col-sm-12 col-md-3 col-lg-4 my-4'>
+                    <div class="product-container poster relative-div">
+                        <a href="{{ product.url | within: collection }}">
+                          <div class= 'parallax-div-container'>
+                          <div class='product-img-container layer-1' data-offset="{% if section.settings.card_parallax %}-5{% else %}0{% endif %}">
+                            <img class="product-img" src="{{ product.featured_image | img_url : "500x" }}" alt="{{ product.featured_image.alt | escape }}">
+                           </div>
+                          </div>
+                        </a>
+                        <div class="product-info layer-2 p-3">
+                            <a href="{{ product.url }}">
+                                <h2 class="product-title px-3">{{ product.title }}</h2>                    
+                            </a>
+                            <div class="d-inline-flex metafields">
+                                <p class="px-3 ">{{ product.metafields.custom.grade }}</p>
+                                <p class="px-3 ">{{ product.metafields.custom.semester }}</p>
+                            </div>
+                            <h3 class='px-3'>{{ product.price | money }}</h3>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-36251023-1']);
+  _gaq.push(['_setDomainName', 'jqueryscript.net']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+
+
+
+{% schema %}
+{
+    "name": "t:sections.main-collection-product-grid.name",
+    "class": "section",
+    "settings": [
+        {
+          "type": "checkbox",
+          "id": "card_parallax",
+          "label": "parallax effect on mouse hover",       
+          "default": false
+        },
+        {
+          "type": "text",
+          "id": "all_products_",
+          "label": "Store products intro"      
+        }
+    ]
+}
+{% endschema %}

@@ -1,0 +1,309 @@
+{% assign imageOptions = section.settings.img_alignment %}
+<!-- {% assign parallax = section.settings.parallax %} -->
+<section class="home-hero relative-div" data-parallax="scroll" {% if section.settings.parallax %} data-image-src="{{ section.settings.bg-image | img_url : 'master' }}" {% endif %}>
+    <div class="shade-overlay"></div>
+    <div class="container p-0" >
+        <div class="row">
+            <div class="col-12 col-md-6 arabic-text text-right" {% if section.settings.ar_lang %}dir="rtl"{% endif %}>
+                <div class="p-5 m-auto ">
+                    <!--    text user input -->
+                    <h2 class = 'intro-title text-light my-3 display-3'>{{ section.settings.intro_title }}</h2>
+                    <div class="text-light richtext-container">
+                        <!--    richtext user input -->
+                        <p class= 'intro-sub-title my-3'>{{ section.settings.intro_subTitle }}</p>  
+                    </div>
+                    <!--    search bar -->
+                    <form action="/search" method="GET" role="search">
+                        <div class = 'row'>
+                            <div class='col-12 col-md-6'>
+                                <input type="text" class="form-control form-control-lg my-3" name="q" value="{{ search.terms | escape }}">
+                                <button type="submit" class="btn btn-lg flexed-btn my-3">Search</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+            <div class="col-12 col-md-6 p-3">
+                <div class="banner-cards my-5 relative-div">
+                    <div class="swiper mySwiper">
+                        <div class="swiper-wrapper">
+                            
+                            {% assign slide_num = 0 %}
+                            {% for block in section.blocks %}
+                            <!-- adjusting the "slide_" class by incrementation in every loop entry -->
+                            <div class="swiper-slide slide_{{ slide_num | plus: 1 }} ">
+                                <div class="book-shadow-line"></div>
+                                <!--    image user input -->
+                                <img class="card-book" src="{{block.settings.card_book | img_url: 'master' }}"  alt="{{ product.featured_image.alt | escape }}">   
+                            </div>
+                            <!--    slider_num++    -->
+                            {% assign slide_num = slide_num | plus: 1 %}      
+                            {% endfor %}
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="headder">
+        <!--Waves Container-->
+        <svg class="waves" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 24 150 28" preserveAspectRatio="none" shape-rendering="auto">
+            <defs>
+                <path id="gentle-wave" d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z" />
+            </defs>
+            <g class="parallax">
+                <use xlink:href="#gentle-wave" x="48" y="0" fill="rgba(255,255,255,0.7" />
+                <use xlink:href="#gentle-wave" x="48" y="3" fill="rgba(255,255,255,0.5)" />
+                <use xlink:href="#gentle-wave" x="48" y="5" fill="rgba(255,255,255,0.3)" />
+                <use xlink:href="#gentle-wave" x="48" y="7" fill="#fff" />
+            </g>
+        </svg>  <!--Waves end-->
+    </div>  <!--Header ends-->
+    
+    
+</section>
+
+{% schema %}
+{
+    "name": "Hero Section", 
+    "limit": 1,
+    "settings" : [
+    {
+        "type" : "text",
+        "id" : "intro_title",
+        "label" : "Intro Heading"
+    }, 
+    {
+        "type" : "richtext",
+        "id" : "intro_subTitle",
+        "label" : "Intro Paragraph"
+    },
+    {
+        "type" : "image_picker",
+        "id" : "bg-image",
+        "label" : "Section Background image"
+    },
+    {
+        "type" : "checkbox",
+        "id" : "parallax",
+        "label" : "Make the background image scroll smooth",
+        "default": false
+    },
+    {
+        "type": "select",
+        "id": "img_alignment",
+        "label": "Image alignment",
+        "options": [
+        {
+            "value": "fixed",
+            "label": "Sticky"
+        },
+        {
+            "value": "scroll",
+            "label": "Normal"
+        }
+        ],
+        "default": "scroll"
+    },
+    {
+      "type":"checkbox",
+      "id":"ar_lang",
+      "label" : "Language Context Arabic",
+      "default" : false
+    }
+    ],
+    "blocks" : [
+    {
+        "name" : "Slide",
+        "type" : "hero",
+        "settings" : [
+        {
+            "type" : "image_picker",
+            "id" : "card_book",
+            "label" : "Book Cover Image"
+        }
+        ],
+        "limit" : 5
+    }
+    ],
+    "presets" : [
+    {
+        "category" : "Home Books",
+        "name" : "Hero Section"
+    }
+    ]
+}
+{% endschema %}
+
+
+{% style %}
+
+{% if section.settings.ar_lang %}
+/*   .arabic-text{
+    text-align:right;
+  }
+  body{
+    direction :rtl;
+  } */
+  {% endif %}  
+  
+/* Swiper container stylng */
+.home-hero .swiper {
+    right: 1rem;
+    width: 100%;
+    height: 100%;
+}
+
+.home-hero .swiper {
+    width: 329px;
+    height: 500px;
+} 
+
+.home-hero .swiper-slide {
+    text-align: center;
+    /* Center slide text vertically */
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    -webkit-justify-content: center;
+    justify-content: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    -webkit-align-items: center;
+    align-items: center;
+    position: relative; 
+    box-shadow: 3px 5px 5px #525252;
+}
+.home-hero .swiper-slide img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    position: absolute;
+    right: 0;
+}
+
+.book-shadow-line{
+    height: 100%;
+    width: 8px;
+    box-shadow: 15px 0px 30px 3px #ffffff;
+    position: absolute;
+    left: 15px;
+    top: 0;
+    z-index: 5;
+}
+
+.home-hero .richtext-container{
+    font-size:1.5rem;
+}
+
+.home-hero .headder {
+    position:relative;
+    text-align:center;
+    background: linear-gradient(to top left, #00e3ff 0%, #9bc8ff 100%)
+    color:white;
+}
+.home-hero .logo {
+    width:50px;
+    fill:white;
+    padding-right:15px;
+    display:inline-block;
+    vertical-align: middle;
+}
+
+.home-hero .inner-header {
+    height:65vh;
+    width:100%;
+    margin: 0;
+    padding: 0;
+}
+
+.home-hero .waves {
+    position:relative;
+    width: 100%;
+    height:15vh;
+    margin-bottom:-7px; /*Fix for safari gap*/
+    min-height:100px;
+    max-height:150px;
+}
+
+.home-hero .content {
+    position:relative;
+    height:20vh;
+    text-align:center;
+    background-color: white;
+}
+
+/* Animation */
+
+.home-hero .parallax > use {
+    animation: move-forever 25s cubic-bezier(.55,.5,.45,.5)     infinite;
+}
+.home-hero .parallax > use:nth-child(1) {
+    animation-delay: -2s;
+    animation-duration: 7s;
+}
+.home-hero .parallax > use:nth-child(2) {
+    animation-delay: -3s;
+    animation-duration: 10s;
+}
+.home-hero .parallax > use:nth-child(3) {
+    animation-delay: -4s;
+    animation-duration: 13s;
+}
+.home-hero .parallax > use:nth-child(4) {
+    animation-delay: -5s;
+    animation-duration: 20s;
+}
+@keyframes move-forever {
+    0% {
+        transform: translate3d(-90px,0,0);
+    }
+    100% { 
+        transform: translate3d(85px,0,0);
+    }
+}
+/*Shrinking for mobile*/
+@media (max-width: 768px) {
+    .home-hero .waves {
+        height:40px;
+        min-height:40px;
+    }
+    .home-hero .content {
+        height:30vh;
+    }
+    .home-hero h1 {
+        font-size:24px;
+    }
+}
+
+  .home-hero {
+  background-attachment : {{ imageOptions }};
+  {%unless section.settings.parallax %}
+  background-image : url(" {{ section.settings.bg-image | img_url : 'master' }} ");
+  {% endunless %}
+  background-repeat: no-repeat; 
+  background-size: cover;
+}
+{% endstyle %}
+
+
+
+{% javascript%}
+//  Initialize CARD HOME Swiper
+let swiper = new Swiper(".home-hero .mySwiper", {
+    effect: "cards",
+    grabCursor: true,
+    speed:1000,
+    autoplay: {
+        delay: 3500,
+        disableOnInteraction: false,
+    }
+});
+{% endjavascript %}
